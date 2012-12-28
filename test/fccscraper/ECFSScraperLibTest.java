@@ -21,9 +21,9 @@ import org.openqa.selenium.WebDriver;
  *
  * @author armin
  */
-public class EFCSScraperLibTest {
+public class ECFSScraperLibTest {
     
-    public EFCSScraperLibTest() {
+    public ECFSScraperLibTest() {
     }
     
     @BeforeClass
@@ -43,21 +43,21 @@ public class EFCSScraperLibTest {
     }
 
     /**
-     * Test of getDriver method, of class EFCSScraperLib.
+     * Test of getDriver method, of class ECFSScraperLib.
      */
     @Test
     public void testGetDriver() {
         System.out.println("getDriver");
         String choice = "";
         WebDriver expResult = null;
-        WebDriver result = EFCSScraperLib.getDriver(choice);
+        WebDriver result = ECFSScraperLib.getDriver(choice);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of scrapeFiling method, of class EFCSScraperLib.
+     * Test of scrapeFiling method, of class ECFSScraperLib.
      */
     @Test
     public void testScrapeFiling() throws Exception {
@@ -67,14 +67,14 @@ public class EFCSScraperLibTest {
         String folderPath = "";
         String driver = "";
         Filing expResult = null;
-        Filing result = EFCSScraperLib.scrapeFiling(url, proceeding, folderPath, driver);
+        Filing result = ECFSScraperLib.scrapeFiling(url, proceeding, folderPath, driver);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of scrapeProceeding method, of class EFCSScraperLib.
+     * Test of scrapeProceeding method, of class ECFSScraperLib.
      */
     @Test
     public void testScrapeProceeding() throws Exception {
@@ -83,35 +83,35 @@ public class EFCSScraperLibTest {
         String folderPath = "";
         String driver = "";
         FCCProceeding expResult = null;
-        FCCProceeding result = EFCSScraperLib.scrapeProceeding(proceedingName, folderPath, driver);
+        FCCProceeding result = ECFSScraperLib.scrapeProceeding(proceedingName, folderPath, driver);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of pagesLeft method, of class EFCSScraperLib.
+     * Test of pagesLeft method, of class ECFSScraperLib.
      */
     @Test
     public void testPagesLeft() {
         System.out.println("pagesLeft");
         WebDriver currentDriver = null;
         List expResult = null;
-        List result = EFCSScraperLib.pagesLeft(currentDriver);
+        List result = ECFSScraperLib.pagesLeft(currentDriver);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of addProceedingsOnPage method, of class EFCSScraperLib.
+     * Test of addProceedingsOnPage method, of class ECFSScraperLib.
      */
     @Test
     public void testAddProceedingsOnPage() {
         System.out.println("addProceedingsOnPage");
         WebDriver addDriver = null;
         List expResult = null;
-        List result = EFCSScraperLib.addProceedingsOnPage(addDriver);
+        List result = ECFSScraperLib.addProceedingsOnPage(addDriver);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -123,10 +123,10 @@ public class EFCSScraperLibTest {
         Datastore ds = new Morphia().createDatastore("fcc");
         String folderPath = "/home/armin/data/scraper";
         String startingURL = "http://apps.fcc.gov/ecfs/proceeding_search/";
-        //EFCSScraper test = new EFCSScraper(ds, folderPath, startingURL);
+        //ECFSScraper test = new ECFSScraper(ds, folderPath, startingURL);
         FCCProceeding testProc = new FCCProceeding();
         testProc.setProceeding("97-80");
-        Filing testFiling = EFCSScraperLib.scrapeFiling(url, testProc, folderPath, "htmlunit");
+        Filing testFiling = ECFSScraperLib.scrapeFiling(url, testProc, folderPath, "htmlunit");
         //assertEquals("97-80", testFiling.getProceeding().getProceeding());
         assertEquals("Policy Division", testFiling.getNameOfFiler());
         assertEquals("FCC", testFiling.getLawfirmName());
@@ -143,11 +143,11 @@ public class EFCSScraperLibTest {
     @Test
     public void testFilingScraper2() throws MalformedURLException, IOException {
         String url = "http://apps.fcc.gov/ecfs/comment/view?id=5511637516";
-        //EFCSScraper test = new EFCSScraper();
+        //ECFSScraper test = new ECFSScraper();
         FCCProceeding testProc = new FCCProceeding();
         String folderPath = "/home/armin/data/scraper";
         testProc.setProceeding("03-237");
-        Filing testFiling = EFCSScraperLib.scrapeFiling(url, testProc, folderPath, "htmlunit");
+        Filing testFiling = ECFSScraperLib.scrapeFiling(url, testProc, folderPath, "htmlunit");
         //assertEquals("03-237", testFiling.getProceeding().getProceeding());
         assertEquals("Sprint Corporation", testFiling.getNameOfFiler());
         //assertEquals("FCC", testFiling.getLawfirmName());

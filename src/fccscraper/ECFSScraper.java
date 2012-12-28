@@ -12,14 +12,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 /**
- * EFCSScraper provides a scraper that can be used to scrape information from the FCC
- * EFCS site.  An EFCSScraper object can accept Bureau and Proceeding ID input parameters, and 
- * perform a scrape based on those inputs.  See EFCSScraperTest.testScraper() as an example
+ * ECFSScraper provides a scraper that can be used to scrape information from the FCC
+ * ECFS site.  An ECFSScraper object can accept Bureau and Proceeding ID input parameters, and 
+ * perform a scrape based on those inputs.  See ECFSScraperTest.testScraper() as an example
  * usage.
  * 
  * @author armin
  */
-public class EFCSScraper {
+public class ECFSScraper {
 
     // The url start on.
     private String startingURL;
@@ -61,23 +61,23 @@ public class EFCSScraper {
     // Constructor that ensures the setting of required parameters.
     // Bureau and proceeding search parameters should be set by their 
     // respective setters, as they are optional.
-    public EFCSScraper(Datastore ds, String folderPath, String startingURL) {
+    public ECFSScraper(Datastore ds, String folderPath, String startingURL) {
         this.ds = ds;
         this.folderPath = folderPath;
         this.startingURL = startingURL;
     }
 
     /**
-     * scrapeEFCS performs a search on the EFCS website and scrapes all of the
+     * scrapeECFS performs a search on the ECFS website and scrapes all of the
      * data.  If returns a List of FCCProceedings representing that data, which
-     * can then be persisted. See EFCSScraperTest.testScraper() for a usage
+     * can then be persisted. See ECFSScraperTest.testScraper() for a usage
      * example.
      * @param driverChoice The type of WebDriver to use.  See getDriver().
      * @return List<FCCProceeding>
      * @throws MalformedURLException
      * @throws IOException 
      */
-    public List<FCCProceeding> scrapeEFCS(String driverChoice) throws MalformedURLException, IOException {
+    public List<FCCProceeding> scrapeECFS(String driverChoice) throws MalformedURLException, IOException {
         // Create a list that will be returned.
         List<FCCProceeding> returnProceedings = new ArrayList<FCCProceeding>();
         // Create a temporary list of proceedings.
@@ -96,12 +96,12 @@ public class EFCSScraper {
         // If the user wants to scrape a specific proceeding, just call
         // scrapeProceeding().
         if (inputProceeding != null) {
-            returnProceedings.add(EFCSScraperLib.scrapeProceeding(this.getInputProceeding(), folderPath, driverChoice));
+            returnProceedings.add(ECFSScraperLib.scrapeProceeding(this.getInputProceeding(), folderPath, driverChoice));
         } 
         // If not, prepare for multiple proceedings.
         else {
             // Get a WebDriver and open the search form.
-            WebDriver driver = EFCSScraperLib.getDriver(driverChoice);
+            WebDriver driver = ECFSScraperLib.getDriver(driverChoice);
             driver.get(startingURL);
             
             // If inputBureau is set, choose the bureau in the form.
@@ -123,23 +123,23 @@ public class EFCSScraper {
             proceedingNumber.click();
             
             // Get a list of pages of results.
-            List<WebElement> pagesLeft = EFCSScraperLib.pagesLeft(driver);
+            List<WebElement> pagesLeft = ECFSScraperLib.pagesLeft(driver);
             // If there are less than 10 results, just grab the proceedings
             // on the current page.
             if (pagesLeft.isEmpty()) {
-                tempProcs.addAll(EFCSScraperLib.addProceedingsOnPage(driver));
+                tempProcs.addAll(ECFSScraperLib.addProceedingsOnPage(driver));
             } 
             // Otherwise, prepare to go through pages of results.
             else {
                 while (!pagesLeft.isEmpty()) {
-                    tempProcs.addAll(EFCSScraperLib.addProceedingsOnPage(driver));
+                    tempProcs.addAll(ECFSScraperLib.addProceedingsOnPage(driver));
                     //List<FCCProceeding> tempProceedings = addProceedingsOnPage(driver);
                     pagesLeft.get(0).click();
-                    pagesLeft = EFCSScraperLib.pagesLeft(driver);
+                    pagesLeft = ECFSScraperLib.pagesLeft(driver);
                     // If we hit the last page, grab the results before the
                     // while loop ends
                     if (pagesLeft.isEmpty()) {
-                        tempProcs.addAll(EFCSScraperLib.addProceedingsOnPage(driver));
+                        tempProcs.addAll(ECFSScraperLib.addProceedingsOnPage(driver));
                     }
                 }
             }
@@ -148,7 +148,7 @@ public class EFCSScraper {
         // Now that we have a list of proceedings, call scrapeProceeding on
         // each one and add it to returnProceeding.
         for (FCCProceeding temp : tempProcs) {
-            returnProceedings.add(EFCSScraperLib.scrapeProceeding(temp.getProceeding(), folderPath, driverChoice));
+            returnProceedings.add(ECFSScraperLib.scrapeProceeding(temp.getProceeding(), folderPath, driverChoice));
         }
         return returnProceedings;
     }

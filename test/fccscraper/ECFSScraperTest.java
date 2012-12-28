@@ -21,9 +21,9 @@ import static org.junit.Assert.*;
  *
  * @author armin
  */
-public class EFCSScraperTest {
+public class ECFSScraperTest {
 
-    public EFCSScraperTest() {
+    public ECFSScraperTest() {
     }
 
     @BeforeClass
@@ -43,12 +43,12 @@ public class EFCSScraperTest {
     }
 
     /**
-     * Test of getBureau method, of class EFCSScraper.
+     * Test of getBureau method, of class ECFSScraper.
      */
     //@Test
     public void testGetBureau() {
         System.out.println("getBureau");
-        EFCSScraper instance = null;
+        ECFSScraper instance = null;
         String expResult = "";
         String result = instance.getBureau();
         assertEquals(expResult, result);
@@ -57,25 +57,25 @@ public class EFCSScraperTest {
     }
 
     /**
-     * Test of setBureau method, of class EFCSScraper.
+     * Test of setBureau method, of class ECFSScraper.
      */
     //@Test
     public void testSetBureau() {
         System.out.println("setBureau");
         String bureau = "";
-        EFCSScraper instance = null;
+        ECFSScraper instance = null;
         instance.setBureau(bureau);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of getFolderPath method, of class EFCSScraper.
+     * Test of getFolderPath method, of class ECFSScraper.
      */
     //@Test
     public void testGetFolderPath() {
         System.out.println("getFolderPath");
-        EFCSScraper instance = null;
+        ECFSScraper instance = null;
         String expResult = "";
         String result = instance.getFolderPath();
         assertEquals(expResult, result);
@@ -84,25 +84,25 @@ public class EFCSScraperTest {
     }
 
     /**
-     * Test of setFolderPath method, of class EFCSScraper.
+     * Test of setFolderPath method, of class ECFSScraper.
      */
     //@Test
     public void testSetFolderPath() {
         System.out.println("setFolderPath");
         String folderPath = "";
-        EFCSScraper instance = null;
+        ECFSScraper instance = null;
         instance.setFolderPath(folderPath);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of getInputProceeding method, of class EFCSScraper.
+     * Test of getInputProceeding method, of class ECFSScraper.
      */
     //@Test
     public void testGetInputProceeding() {
         System.out.println("getInputProceeding");
-        EFCSScraper instance = null;
+        ECFSScraper instance = null;
         String expResult = "";
         String result = instance.getInputProceeding();
         assertEquals(expResult, result);
@@ -111,35 +111,35 @@ public class EFCSScraperTest {
     }
 
     /**
-     * Test of setInputProceeding method, of class EFCSScraper.
+     * Test of setInputProceeding method, of class ECFSScraper.
      */
     //@Test
     public void testSetInputProceeding() {
         System.out.println("setInputProceeding");
         String inputProceeding = "";
-        EFCSScraper instance = null;
+        ECFSScraper instance = null;
         instance.setInputProceeding(inputProceeding);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of scrapeEFCS method, of class EFCSScraper.
+     * Test of scrapeECFS method, of class ECFSScraper.
      */
     //@Test
-    public void testScrapeEFCS() throws Exception {
-        System.out.println("scrapeEFCS");
+    public void testScrapeECFS() throws Exception {
+        System.out.println("scrapeECFS");
         String driverChoice = "";
-        EFCSScraper instance = null;
+        ECFSScraper instance = null;
         List expResult = null;
-        List result = instance.scrapeEFCS(driverChoice);
+        List result = instance.scrapeECFS(driverChoice);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of main method, of class EFCSScraper.
+     * Test of main method, of class ECFSScraper.
      */
     @Test
     public void testScraper() throws Exception {
@@ -158,12 +158,12 @@ public class EFCSScraperTest {
         String startingURL = "http://apps.fcc.gov/ecfs/proceeding_search/";
         // Create a new scraper object and set the bureau and
         // proceeding name parameters.
-        EFCSScraper test = new EFCSScraper(ds, folderPath, startingURL);
+        ECFSScraper test = new ECFSScraper(ds, folderPath, startingURL);
         //test.setBureau("Cable Services Bureau");
         //test.setInputProceeding("98-69");
         test.setBureau("Field Operations Bureau");
         // Run the scraper
-        List<FCCProceeding> proceedings = test.scrapeEFCS("firefox");
+        List<FCCProceeding> proceedings = test.scrapeECFS("firefox");
         System.out.println("Printing Proceedings:");
         // Persist the proceedings.  If they exist already delete them and save
         // the new proceeding.

@@ -1,5 +1,5 @@
 /*
- * This is the lib for the FCC EFCS website.  It provides static utility functions that can then be put together
+ * This is the lib for the FCC ECFS website.  It provides static utility functions that can then be put together
  * to scrape a defined set of proceedings and filings.
  */
 package fccscraper;
@@ -25,7 +25,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  *
  * @author armin
  */
-public class EFCSScraperLib {
+public class ECFSScraperLib {
 
     /**
      * Provides a WebDriver object.  Pass the parameter of the type of driver you want to use.
@@ -51,7 +51,7 @@ public class EFCSScraperLib {
 
     /**
      * scrapeFiling() is a static function that scrapes the page of a single
-     * EFCS filing page and returns a Filing object.  It can be used standalone,
+     * ECFS filing page and returns a Filing object.  It can be used standalone,
      * but is intended to be used in conjunction with scrapeProceeding(), since
      * that function will scrape a proceeding page and call scrapeFiling() on
      * every filing belonging to that proceeding.
@@ -66,10 +66,10 @@ public class EFCSScraperLib {
      */
     public static Filing scrapeFiling(String url, FCCProceeding proceeding, String folderPath, String driverType) throws MalformedURLException, IOException {
         //Get a WebDriver and open the page.
-        WebDriver filingDriver = EFCSScraperLib.getDriver(driverType);
+        WebDriver filingDriver = ECFSScraperLib.getDriver(driverType);
         filingDriver.get(url);
         
-        //Grab the EFCS id from the URL
+        //Grab the ECFS id from the URL
         String filingID = url.substring(url.length() - 10, url.length());
         
         //Create a new Filing instance to be returned and set its filingId.
@@ -140,7 +140,7 @@ public class EFCSScraperLib {
     }
 
     /**
-     * scrapeProceeding() scrapes an EFCS proceeding and returns an FCCProceeding object.
+     * scrapeProceeding() scrapes an ECFS proceeding and returns an FCCProceeding object.
      * It begins by scraping the information off of the main proceeding page.  It then
      * assembles a list of links to all of the filings associated with it.  Once the list
      * is assembled, it runs scrapeFiling() on each filing, and saves the filings in an
@@ -160,7 +160,7 @@ public class EFCSScraperLib {
         returnProceeding.setProceedingURL("http://apps.fcc.gov/ecfs/proceeding/view?name=" + proceedingName);
         
         // Get the WebDriver and open the page and wait.
-        WebDriver procDriver = EFCSScraperLib.getDriver(driverType);
+        WebDriver procDriver = ECFSScraperLib.getDriver(driverType);
         procDriver.get(returnProceeding.getProceedingURL());
         WebDriverWait wait = new WebDriverWait(procDriver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@class='dataTable']")));
@@ -270,7 +270,7 @@ public class EFCSScraperLib {
      * addProceedingsOnPage() is a utility function that grabs the proceedings on a search page
      * and returns a List<FCCProceedings>.  This should be called to handle a search that results in
      * a list of proceedings.  The resulting list should be used as stubs to do further scraping, not as
-     * proceedings ready to be persisted.  See EFCSScraper.scrapeEFCS() for usage.
+     * proceedings ready to be persisted.  See ECFSScraper.scrapeECFS() for usage.
      * @param addDriver The WebDriver of the calling function.
      * @return List<FCCProceeding> (albeit not fully scraped).
      */
