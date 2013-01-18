@@ -28,14 +28,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class ECFSScraperLib {
 
     /**
-     * Provides a WebDriver object.  Pass the parameter of the type of driver you want to use.
-     * "firefox" returns a FireFoxDriver.
-     * "htmlunit" returns an HtmlUnitDriver.
-     * "chrome" returns a ChromeDriver.
-     * 
-     * @param choice    A string that sets the type of driver returned.  It can be "htmlunit", "firefox", or "chrome".
-     * @return a WebDriver object.  Null if the parameter did not match one of the drivers.
-     * 
+     * Provides a WebDriver object. Pass the parameter of the type of driver you
+     * want to use. "firefox" returns a FireFoxDriver. "htmlunit" returns an
+     * HtmlUnitDriver. "chrome" returns a ChromeDriver.
+     *
+     * @param choice A string that sets the type of driver returned. It can be
+     * "htmlunit", "firefox", or "chrome".
+     * @return a WebDriver object. Null if the parameter did not match one of
+     * the drivers.
+     *
      */
     public static WebDriver getDriver(String choice) {
         if (choice.equals("firefox")) {
@@ -51,36 +52,38 @@ public class ECFSScraperLib {
 
     /**
      * scrapeFiling() is a static function that scrapes the page of a single
-     * ECFS filing page and returns a Filing object.  It can be used standalone,
+     * ECFS filing page and returns a Filing object. It can be used standalone,
      * but is intended to be used in conjunction with scrapeProceeding(), since
      * that function will scrape a proceeding page and call scrapeFiling() on
      * every filing belonging to that proceeding.
-     * 
-     * @param url Should be http://apps.fcc.gov/ecfs/comment/view?id= + filing id.
+     *
+     * @param url Should be http://apps.fcc.gov/ecfs/comment/view?id= + filing
+     * id.
      * @param proceeding The FCCProceeding of the filing.
-     * @param folderPath The parent folder path where the filing pdfs are stored.
+     * @param folderPath The parent folder path where the filing pdfs are
+     * stored.
      * @param driverType The type of WebDriver to be used. see getDriver();
      * @return the filing as a Filing object.
      * @throws MalformedURLException If the URL is invalid.
-     * @throws IOException 
+     * @throws IOException
      */
     public static Filing scrapeFiling(String url, FCCProceeding proceeding, String folderPath, String driverType) throws MalformedURLException, IOException {
         //Get a WebDriver and open the page.
         WebDriver filingDriver = ECFSScraperLib.getDriver(driverType);
         filingDriver.get(url);
-        
+
         //Grab the ECFS id from the URL
         String filingID = url.substring(url.length() - 10, url.length());
-        
+
         //Create a new Filing instance to be returned and set its filingId.
         Filing nuFiling = new Filing();
         nuFiling.setFilingId(filingID);
-        
+
         //Grab the proceeding attributes from the page.  Wait for the page to load first.
         WebDriverWait wait = new WebDriverWait(filingDriver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='expDataTable']/div[@class='wwgrp']")));
         List<WebElement> fAttr = filingDriver.findElements(By.xpath("//div[@class='expDataTable']/div[@class='wwgrp']"));
-        
+
         //Get all the proceeding attributes and add them to nuFiling as they are found.
         for (WebElement attr : fAttr) {
             WebElement label = attr.findElement(By.className("wwlbl"));
@@ -133,24 +136,27 @@ public class ECFSScraperLib {
                 }
             }
         }
-        
+
         //Close the driver and return the Filing.
         filingDriver.close();
         return nuFiling;
     }
 
     /**
-     * scrapeProceeding() scrapes an ECFS proceeding and returns an FCCProceeding object.
-     * It begins by scraping the information off of the main proceeding page.  It then
-     * assembles a list of links to all of the filings associated with it.  Once the list
-     * is assembled, it runs scrapeFiling() on each filing, and saves the filings in an
-     * ArrayList in the FCCProceeding object.
+     * scrapeProceeding() scrapes an ECFS proceeding and returns an
+     * FCCProceeding object. It begins by scraping the information off of the
+     * main proceeding page. It then assembles a list of links to all of the
+     * filings associated with it. Once the list is assembled, it runs
+     * scrapeFiling() on each filing, and saves the filings in an ArrayList in
+     * the FCCProceeding object.
+     *
      * @param proceedingName String value of the proceeding name.
-     * @param folderPath the parent folder path where the filing pdfs should be stored.
-     * @param driverType the WebDriver type to be used.  See getDriver().
+     * @param folderPath the parent folder path where the filing pdfs should be
+     * stored.
+     * @param driverType the WebDriver type to be used. See getDriver().
      * @return FCCProceeding object.
      * @throws MalformedURLException
-     * @throws IOException 
+     * @throws IOException
      */
     public static FCCProceeding scrapeProceeding(String proceedingName, String folderPath, String driverType) throws MalformedURLException, IOException {
         // FCCProceeding object to be returned.
@@ -158,13 +164,13 @@ public class ECFSScraperLib {
         // Set attributes.
         returnProceeding.setProceeding(proceedingName);
         returnProceeding.setProceedingURL("http://apps.fcc.gov/ecfs/proceeding/view?name=" + proceedingName);
-        
+
         // Get the WebDriver and open the page and wait.
         WebDriver procDriver = ECFSScraperLib.getDriver(driverType);
         procDriver.get(returnProceeding.getProceedingURL());
         WebDriverWait wait = new WebDriverWait(procDriver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@class='dataTable']")));
-        
+
         // Get the attributes on the page and save them to returnProceeding.
         List<WebElement> fAttr = procDriver.findElements(By.xpath("//table[@class='dataTable']//div[@class='wwgrp']"));
         for (WebElement attr : fAttr) {
@@ -188,12 +194,22 @@ public class ECFSScraperLib {
                 returnProceeding.setConsolidatedInto(value.getText());
             } else if (label.getText().equals("Date Public Notice:")) {
                 returnProceeding.setDatePublicNotice(value.getText());
+            } else if (label.getText().equals("Name of Party:")) {
+                returnProceeding.setNameOfParty(value.getText());
+            } else if (label.getText().equals("Prepared By:")) {
+                returnProceeding.setPreparedBy(value.getText());
+            } else if (label.getText().equals("Location:")) {
+                returnProceeding.setLocation(value.getText());
+            } else if (label.getText().equals("Call Sign:")) {
+                returnProceeding.setCallSign(value.getText());
+            } else if (label.getText().equals("Channel:")) {
+                returnProceeding.setChannel(value.getText());
             }
         }
-        
+
         // Go to the filings page.
         procDriver.findElement(By.partialLinkText("Search For Comments")).click();
-        
+
         // Go through the filing list and build a list of filing links.
         List<WebElement> pagesLeft = pagesLeft(procDriver);
         List<String> filingLinks = new ArrayList<String>();
@@ -204,8 +220,7 @@ public class ECFSScraperLib {
             for (WebElement link : filingElements) {
                 filingLinks.add(link.getAttribute("href"));
             }
-        }
-        // If there are more than 10 filings the results will be paginated.  Go through the pages and 
+        } // If there are more than 10 filings the results will be paginated.  Go through the pages and 
         // add all the filings into one list.
         else {
             while (!pagesLeft.isEmpty()) {
@@ -235,9 +250,10 @@ public class ECFSScraperLib {
     }
 
     /**
-     * pagesLeft() is a static utility function to help with overcoming pagination on the site.
-     * It is called to handle the lists of proceedings and the lists of filings connected
-     * to a single proceeding.
+     * pagesLeft() is a static utility function to help with overcoming
+     * pagination on the site. It is called to handle the lists of proceedings
+     * and the lists of filings connected to a single proceeding.
+     *
      * @param currentDriver The WebDriver of the calling function.
      * @return List<WebElement> representing the links of pages that remain.
      */
@@ -267,10 +283,13 @@ public class ECFSScraperLib {
     }
 
     /**
-     * addProceedingsOnPage() is a utility function that grabs the proceedings on a search page
-     * and returns a List<FCCProceedings>.  This should be called to handle a search that results in
-     * a list of proceedings.  The resulting list should be used as stubs to do further scraping, not as
-     * proceedings ready to be persisted.  See ECFSScraper.scrapeECFS() for usage.
+     * addProceedingsOnPage() is a utility function that grabs the proceedings
+     * on a search page and returns a List<FCCProceedings>. This should be
+     * called to handle a search that results in a list of proceedings. The
+     * resulting list should be used as stubs to do further scraping, not as
+     * proceedings ready to be persisted. See ECFSScraper.scrapeECFS() for
+     * usage.
+     *
      * @param addDriver The WebDriver of the calling function.
      * @return List<FCCProceeding> (albeit not fully scraped).
      */

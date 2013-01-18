@@ -15,7 +15,26 @@ import org.bson.types.ObjectId;
 @Entity
 public class Hit {
     @Id private ObjectId id = new ObjectId();
+    //The general pattern that has been entered.
     private String genericPattern;
+    // The generated, specific pattern derived from the generic pattern.
     private String actualPattern;
-    private String parameter;
+
+    //private String parameter;
+    
+    public String getGenericPattern() {
+        return genericPattern;
+    }
+
+    public void setGenericPattern(String genericPattern) {
+        this.genericPattern = genericPattern;
+    }
+
+    public String getActualPattern() {
+        return actualPattern;
+    }
+
+    public void setActualPattern(String actualPattern) {
+        this.actualPattern = actualPattern;
+    }
 }

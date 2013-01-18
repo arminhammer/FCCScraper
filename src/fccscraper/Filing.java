@@ -33,8 +33,8 @@ public class Filing {
     private String datePosted;
     private String dAOrFCCNumber;
     private String address;
-    private List<String> documents;
-    @Embedded private List<Hit> hits; 
+    private List<String> documents = new ArrayList<String>();
+    @Embedded private List<Hit> hits = new ArrayList<Hit>();
     
     public String getFilingId() {
         return filingId;
