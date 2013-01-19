@@ -6,21 +6,25 @@ package fccscraper;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Reference;
 import org.bson.types.ObjectId;
 
 /**
- *
+ * Entity class to save search hits.
  * @author armin
  */
-@Entity
-public class Hit {
+@Entity("searchhits")
+public class SearchHit {
     @Id private ObjectId id = new ObjectId();
     //The general pattern that has been entered.
     private String genericPattern;
     // The generated, specific pattern derived from the generic pattern.
     private String actualPattern;
+    // The filing associated with the hit.
+    @Reference
+    private Filing filing;
 
-    //private String parameter;
+    // Getters and setters
     
     public String getGenericPattern() {
         return genericPattern;
@@ -36,5 +40,13 @@ public class Hit {
 
     public void setActualPattern(String actualPattern) {
         this.actualPattern = actualPattern;
+    }
+
+    public Filing getFiling() {
+        return filing;
+    }
+
+    public void setFiling(Filing filing) {
+        this.filing = filing;
     }
 }

@@ -109,7 +109,7 @@ public class ECFSScraper {
             if (inputBureau != null) {
                 List<WebElement> allOptions = setBureau.findElements(By.tagName("option"));
                 for (WebElement option : allOptions) {
-                    System.out.println(String.format("Value is: %s", option.getText()));
+                    //System.out.println(String.format("Value is: %s", option.getText()));
                     if (option.getText().equals(inputBureau)) {
                         option.click();
                         break;

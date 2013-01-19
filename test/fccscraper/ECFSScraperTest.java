@@ -147,13 +147,13 @@ public class ECFSScraperTest {
         System.out.println("main");
         java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
         // Connect to the mongoDB.
-        Datastore ds;
-        try {
-            Mongo m = new Mongo("localhost", 27017);
-            ds = new Morphia().map(FCCProceeding.class).createDatastore(m, "fcc");
-        } catch (Exception e) {
-            throw new RuntimeException("Error initializing mongo db.");
-        }
+        Datastore ds = ECFSScraperLib.getDataStore("fccTesting", "localhost", 27017);
+        //try {
+        //    Mongo m = new Mongo("localhost", 27017);
+        //    ds = new Morphia().map(FCCProceeding.class).createDatastore(m, "fcc");
+        //} catch (Exception e) {
+        //    throw new RuntimeException("Error initializing mongo db.");
+        //}
         // Set the root folder and the startingURL.
         String folderPath = "/home/armin/data/scraper";
         String startingURL = "http://apps.fcc.gov/ecfs/proceeding_search/";
@@ -162,7 +162,7 @@ public class ECFSScraperTest {
         ECFSScraper test = new ECFSScraper(ds, folderPath, startingURL);
         //test.setBureau("Cable Services Bureau");
         //test.setInputProceeding("98-69");
-        test.setBureau("Field Operations Bureau");
+        test.setBureau("Office of Communications and Business Op");
         // Run the scraper
         List<FCCProceeding> proceedings = test.scrapeECFS("htmlunit");
         System.out.println("Printing Proceedings:");
@@ -170,25 +170,29 @@ public class ECFSScraperTest {
         // the new proceeding.
         for (int i = 0; i < proceedings.size(); i++) {
             FCCProceeding proceeding = ds.createQuery(FCCProceeding.class).field("proceedingURL").equal(proceedings.get(i).getProceedingURL()).get();
-            proceeding.updateWith(ds, proceeding);
-            /*if (proceeding != null) {
-                System.out.println("Copy " + proceeding + " found.  Updating and saving new version " + proceedings.get(i));
-                if (proceeding.equals(proceedings.get(i))) {
-                    System.out.println("Proceeding has not changed and does not need to be changed.");
-                } else {
-                    if (!proceedings.get(i).getProceeding().equals(proceeding.getProceeding())) {
-                        System.out.println("Updating proceeding name.");
-                        UpdateOperations<FCCProceeding> ops = ds.createUpdateOperations(FCCProceeding.class).set("proceeding", proceedings.get(i).getProceeding());
-                    }
-                    if (!proceedings.get(i).getProceedingURL().equals(proceeding.getProceedingURL())) {
-                        System.out.println("Updating proceeding URL.");
-                        UpdateOperations<FCCProceeding> ops = ds.createUpdateOperations(FCCProceeding.class).set("proceedingURL", proceedings.get(i).getProceedingURL());
-                    }
-                }
+            if (proceeding == null) {
+                proceedings.get(i).save(ds);
             } else {
-                System.out.println("Not found.  Saving new version " + proceedings.get(i));
-                ds.save(proceedings.get(i));
-            }*/
+                proceeding.updateWith(ds, proceeding);
+            }
+            /*if (proceeding != null) {
+             System.out.println("Copy " + proceeding + " found.  Updating and saving new version " + proceedings.get(i));
+             if (proceeding.equals(proceedings.get(i))) {
+             System.out.println("Proceeding has not changed and does not need to be changed.");
+             } else {
+             if (!proceedings.get(i).getProceeding().equals(proceeding.getProceeding())) {
+             System.out.println("Updating proceeding name.");
+             UpdateOperations<FCCProceeding> ops = ds.createUpdateOperations(FCCProceeding.class).set("proceeding", proceedings.get(i).getProceeding());
+             }
+             if (!proceedings.get(i).getProceedingURL().equals(proceeding.getProceedingURL())) {
+             System.out.println("Updating proceeding URL.");
+             UpdateOperations<FCCProceeding> ops = ds.createUpdateOperations(FCCProceeding.class).set("proceedingURL", proceedings.get(i).getProceedingURL());
+             }
+             }
+             } else {
+             System.out.println("Not found.  Saving new version " + proceedings.get(i));
+             ds.save(proceedings.get(i));
+             }*/
             //ds.save(proceedings.get(i));
         }
     }

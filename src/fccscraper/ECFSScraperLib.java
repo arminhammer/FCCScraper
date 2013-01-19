@@ -4,6 +4,9 @@
  */
 package fccscraper;
 
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Morphia;
+import com.mongodb.Mongo;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -78,6 +81,7 @@ public class ECFSScraperLib {
         //Create a new Filing instance to be returned and set its filingId.
         Filing nuFiling = new Filing();
         nuFiling.setFilingId(filingID);
+        nuFiling.setProceeding(proceeding);
 
         //Grab the proceeding attributes from the page.  Wait for the page to load first.
         WebDriverWait wait = new WebDriverWait(filingDriver, 10);
@@ -244,7 +248,7 @@ public class ECFSScraperLib {
         // list of Filings.
         for (String link : filingLinks) {
             Filing tempFiling = scrapeFiling(link, returnProceeding, folderPath, driverType);
-            returnProceeding.getFilings().add(tempFiling);
+            returnProceeding.getNewFilings().add(tempFiling);
         }
         return returnProceeding;
     }
@@ -310,5 +314,16 @@ public class ECFSScraperLib {
             }
         }
         return proceedings;
+    }
+
+    public static Datastore getDataStore(String name, String server, int port) {
+        Datastore ds;
+        try {
+            Mongo m = new Mongo(server, port);
+            ds = new Morphia().map(FCCProceeding.class).map(Filing.class).map(SearchHit.class).createDatastore(m, name);
+        } catch (Exception e) {
+            throw new RuntimeException("Error initializing mongo db.");
+        }
+        return ds;
     }
 }

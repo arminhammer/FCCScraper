@@ -45,6 +45,9 @@ public class FCCProceedingUpdateTest {
     // The methods must be annotated with annotation @Test. For example:
     //
 
+    /** 
+     * This test tests the function FCCProceeding.updateWith()
+     */
     @Test
     public void testUpdateMethod() {
         System.out.println("main");
@@ -53,7 +56,7 @@ public class FCCProceedingUpdateTest {
         Datastore ds;
         try {
             Mongo m = new Mongo("localhost", 27017);
-            ds = new Morphia().map(FCCProceeding.class).createDatastore(m, "fccTesting");
+            ds = new Morphia().map(FCCProceeding.class).map(Filing.class).map(SearchHit.class).createDatastore(m, "fccTesting");
         } catch (Exception e) {
             throw new RuntimeException("Error initializing mongo db.");
         }
@@ -83,6 +86,32 @@ public class FCCProceedingUpdateTest {
         filing2.setDAOrFCCNumber("Test Dao of FCC Number2");
         filing2.setAddress("Test Address2");
         filing2.getDocuments().add("Document 2");
+        Filing filing3 = new Filing();
+        filing3.setFilingId("23456");
+        filing3.setNameOfFiler("Test Name of Filer2");
+        filing3.setLawfirmName("Test Law Firm Name2");
+        filing3.setAttorneyOrAuthor("Test Attorney or Author2");
+        filing3.setTypeOfFiling("Test Type of Filing2");
+        filing3.setExparte("Test Exparte2");
+        filing3.setSmallBusinessImpact("Test Small Business Impact2");
+        filing3.setDateReceived("Test Date Received2");
+        filing3.setDatePosted("Test Date Posted2");
+        filing3.setDAOrFCCNumber("Test Dao of FCC Number2");
+        filing3.setAddress("Test Address2");
+        filing3.getDocuments().add("Document 2");
+        Filing filing4 = new Filing();
+        filing4.setFilingId("89456");
+        filing4.setNameOfFiler("Test Name of Filer2");
+        filing4.setLawfirmName("Test Law Firm Name2");
+        filing4.setAttorneyOrAuthor("Test Attorney or Author2");
+        filing4.setTypeOfFiling("Test Type of Filing2");
+        filing4.setExparte("Test Exparte2");
+        filing4.setSmallBusinessImpact("Test Small Business Impact2");
+        filing4.setDateReceived("Test Date Received2");
+        filing4.setDatePosted("Test Date Posted2");
+        filing4.setDAOrFCCNumber("Test Dao of FCC Number2");
+        filing4.setAddress("Test Address2");
+        filing4.getDocuments().add("Document 2");
         FCCProceeding proceeding = new FCCProceeding();
         proceeding.setProceeding("Test Proceeding");
         proceeding.setProceedingURL("Test URL");
@@ -99,7 +128,10 @@ public class FCCProceedingUpdateTest {
         proceeding.setLocation("Test Location");
         proceeding.setCallSign("Test Call Sign");
         proceeding.setChannel("Test Channel");
-        proceeding.getFilings().add(filing1);
+        proceeding.getNewFilings().add(filing1);
+        proceeding.getNewFilings().add(filing2);
+        filing1.setProceeding(proceeding);
+        filing2.setProceeding(proceeding);
         FCCProceeding proceeding0 = new FCCProceeding();
         proceeding0.setProceeding("Test Proceeding");
         proceeding0.setProceedingURL("Test URL");
@@ -116,7 +148,7 @@ public class FCCProceedingUpdateTest {
         proceeding0.setLocation("Test Location");
         proceeding0.setCallSign("Test Call Sign");
         proceeding0.setChannel("Test Channel");
-        proceeding0.getFilings().add(filing1);
+        //proceeding0.getFilings().add(filing1);
         FCCProceeding proceeding2 = new FCCProceeding();
         proceeding2.setProceeding("Test Proceeding2");
         proceeding2.setProceedingURL("Test URL");
@@ -133,17 +165,21 @@ public class FCCProceedingUpdateTest {
         proceeding2.setLocation("Test Location2");
         proceeding2.setCallSign("Test Call Sign2");
         proceeding2.setChannel("Test Channel2");
-        proceeding2.getFilings().add(filing1);
-        proceeding2.getFilings().add(filing2);
+        proceeding2.getNewFilings().add(filing3);
+        proceeding2.getNewFilings().add(filing4);
+        filing3.setProceeding(proceeding2);
+        filing4.setProceeding(proceeding2);
 
         if (proceeding.isSaved(ds)) {
             System.out.println("Already saved.");
-        }
-        else {
+        } else {
             System.out.println("Saving.");
-            ds.save(proceeding);
+            proceeding.save(ds);
+            //ds.save(proceeding);
+            //ds.save(filing1);
+            //ds.save(filing2);
         }
-        
+
         //System.out.println("Updating with exact copy.");
         //proceeding.updateWith(ds, proceeding0);
         System.out.println("Updating with new copy.");
