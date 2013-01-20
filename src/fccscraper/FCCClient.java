@@ -220,14 +220,7 @@ public class FCCClient {
                                         List<String> patterns = generatePatterns(Integer.toString(i));
                                         for (String pattern : patterns) {
                                             System.out.println("Searching for " + pattern);
-                                            Query<SearchHit> queryHits = ds.createQuery(SearchHit.class).field("filing").equal(filing);
-                                            for (SearchHit hit : queryHits) {
-                                                if (hit.getGenericPattern().equals(pattern)) {
-                                                    if (hit.getActualPattern().equals(pattern)) {
-                                                        ds.delete(hit);
-                                                    }
-                                                }
-                                            }
+                                            filing.removeHits(ds, Integer.toString(i), pattern);
                                             Pattern p = Pattern.compile(pattern);
                                             Matcher matcher = p.matcher(text);
                                             int count = 0;
